@@ -8,6 +8,9 @@ int SRCLK = 4;
 
 //VARIABLES GOBLALES PARA MANEJO DEL ARREGLO DINAMICO
 int aux = 0;
+int num = 0; //Cantidad de patrones (P4)
+int retardo = 0; //Retardo entre patrones (P4)
+int iter = 0; //Iterador (P4)
 int* list;
 size_t count;
 size_t capacity;
@@ -110,6 +113,24 @@ void askData() {//Pide los datos para guardarlos en el arreglo
       AddItem(aux);
     }  
 }
+
+void askData4() {//Pide los datos para guardarlos en el arreglo (P4)
+	Serial.println("Cuantos patrones va a ingresar?");delay(PAUSE);
+  	num = Serial.parseInt();
+  	Serial.println(num);
+    CreateList((num*8));
+    Serial.println();
+
+    for(int i=0; i<(num*8); i++){
+      //Serial.println();
+      Serial.print("Introducir la fila #");
+      Serial.print(i+1);
+      Serial.print(": ");delay(PAUSE);
+      aux = Serial.parseInt();
+      Serial.println(aux);
+      AddItem(aux);
+    }  
+}
 ////////////////////////////////////////////////////////////////
 
 
@@ -120,14 +141,33 @@ void setup(){
    pinMode(SRCLK, OUTPUT);
    Serial.begin(9600);//Inicializar Serial
    int op = 0;
+  
+  //PREGUNTA SI DESEA AGREGAR UNA MATRIZ (P)
    Serial.println("Desea crear una matriz propia para el punto 3?");
    Serial.println("1. SI ----- 2. NO"); delay(PAUSE);
    op = Serial.parseInt();
+   Serial.println(op);
   
    if(op==1){
 		askData();
         printList();
    }
+  
+  //PREGUNTA SI DESEA AGREGAR MÁS DE UNA MATRIZ (P4)
+  Serial.println("Desea crear una o mas matrices propias para el punto 4?");
+  Serial.println("1. SI ----- 2. NO"); delay(PAUSE);
+  op = Serial.parseInt();
+  Serial.println(op);
+  
+  if(op==1){
+    Serial.println("Que retardo quiere entre patrones: "); delay(PAUSE);
+    retardo = Serial.parseInt();
+    Serial.println(retardo);
+	askData4();
+    printList();
+    Serial.println();
+    Serial.println(retardo);
+  }
   
    Serial.println();
    Serial.println("1. Patron 1.");
@@ -160,7 +200,8 @@ void loop(){
     break;
     
   case 3:
-    ledWrite(list[7],list[6],list[5],list[4],list[3],list[2],list[1],list[0]); delay(TEMPO);
+    //ledWrite(list[0],list[1],list[2],list[3],list[4],list[5],list[6],list[7]); delay(TEMPO);
+    ledWrite(list[iter],list[(iter+1)],list[(iter+2)],list[(iter+3)],list[(iter+4)],list[(iter+5)],list[(iter+6)],list[(iter+7)]); delay(TEMPO);
   	Serial.println("Prueba 3");
  	break;
     
