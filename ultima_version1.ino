@@ -207,6 +207,12 @@ void loop(){
     
   case 4:
   	Serial.println("Prueba 4");
+    for(int i=0; i<(num*8); i+=8){
+      ledWrite(list[iter],list[(iter+1)],list[(iter+2)],list[(iter+3)],list[(iter+4)],list[(iter+5)],list[(iter+6)],list[(iter+7)]); delay(TEMPO);
+      iter+=8;
+      retardo = retardo*1000;
+      delay(retardo);    
+    }
   	break;
   }
 }
