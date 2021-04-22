@@ -31,7 +31,7 @@
         Departamento de Ingeniería Electrónica y Telecomunicaciones\\
         Universidad de Antioquia\\
         Medellín\\
-        Abril de 2021
+        23 de Abril de 2021
             
     \end{center}
 \end{titlepage}
@@ -42,18 +42,45 @@
 El principal objetivo de esta actividad es poner en práctica los conocimientos aprendidos en informática II y en cursos previos de programación o circuitos eléctricos, se pondrán a prueba las habilidades en cuanto a la resolución de problemas. Es una actividad que además de combinar la programación y el montaje de circuitos con Arduino a la vez permite afrontar problemas del mundo laboral.
 
 \section{Análisis del problema} \label{contenido}
+La actividad se basa en la creación de un prototipo de pantalla luminosa la cual se compone de 64 bombillos ledes, estas se han convertido en un objeto frecuente en todo tipo de localidad, sea un restaurante, un anuncio de tránsito, ente otros.
+El problema se divide en 2 dos partes, primero será necesario llevar a cabo el montaje del circuito, usando las indicaciones y la documentación suministradas por los maestros; luego de tener el montaje completamente funcional, la siguiente labor es la implementación de código para realizar los diferentes requerimientos.
+
 
 \section{Tareas definidas} \label{contenido}
 subsection{Investigación}
-Para llevar a cabo esta actividad son necesarios algunos conceptos adicionales, ya que usar pocos puertos y conectar varios integrados en serie son conceptos desconocidos por ahora, es coherente hacer una investigación sobre la documentación del integrado y consultar mas sobre los puertos digitales de un Arduino.
+Para llevar a cabo esta actividad son necesarios algunos conceptos adicionales, ya que usar pocos puertos y conectar varios integrados en conjunto son conceptos desconocidos por ahora, es coherente hacer una investigación en la documentación del integrado y consultar mas sobre los puertos digitales de un Arduino.
 
 \subsection{Montaje circuito}
-El montaje del circuito es una de las principales tareas a afrontar, se debe hacer el arreglo de 64 leds, con sus respectivas resistencias, para controlar esta cantidad de leds a través el Arduino haremos uso del circuito integrado 74HC595. En este caso se usará un C.I. por cada fila (en total 8) haciendo uso de 3 pines digitales. 
-
+El montaje del circuito es una de las principales tareas a afrontar, se debe hacer el arreglo de 64 ledes, con sus respectivas resistencias (en este caso de 560 Ω c/u). Para controlar esta cantidad de ledes a través del Arduino haremos uso del circuito integrado 74HC595. En este caso se usará un C.I. por cada fila (en total 8) haciendo uso de tan solo 3 pines digitales del Arduino. 
 
 \subsection{Codificacion tareas}
+FUNCIONES PARA EL MANEJO DEL CHIP:\\
+\newline
+o	void ledWrite() //Funcion que recibe 8 enteros, para 8 filas de ledes\\
+o	void patron1 () //Muestra el patron solicitado en el primer punto (es el #5)\par
+o	void verificacion() //Función que verifica el funcionamiento de los 64 LEDs\\
+\newline
+FUNCIONES PARA EL MANEJO DEL ARREGLO DINAMICO:\\
+\newline
+o	void CreateList() // Crear una nueva lista\\
+o	void AddItem(int item) // Añadir elemento al final de la lista\\
+o	void RemoveTail() // Eliminar ultimo elemento de la lista\\
+o	void Trim() // Reducir capacidad de la lista al numero de elementos\\
+o	void resize() // Reescalar lista\\
+o	void printList() // Muestra la lista por Serial para debug\\
+o	void askData() //Pide los datos para guardarlos en el arreglo\\
+o	void askData4() //Pide los datos para guardarlos en el arreglo (P4)\\
+\newline
+FUNCIONES CONVENCIONALES:\\
+\newline
+o	void setup() // Una repetición.\\
+o	void loop() //Ciclo infinito\\
+
 
 \section{Problemas presentados} \label{contenido}
+o	Con la conexión, usar fotos\par
+o	Con tinker por la conexión\par
+
 
 \section{Consideraciones} \label{contenido}
 
