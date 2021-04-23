@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{listings}
+\usepackage{float}
 \usepackage{graphicx}
 \graphicspath{ {images/} }
 \usepackage{cite}
@@ -50,14 +51,23 @@ El problema se divide en 2 dos partes, primero será necesario llevar a cabo el 
 \subsection{Investigación}
 Para llevar a cabo esta actividad son necesarios algunos conceptos adicionales, ya que usar pocos puertos y conectar varios integrados en conjunto son conceptos desconocidos por ahora, es coherente hacer una investigación en la documentación del integrado y consultar mas sobre los puertos digitales de un Arduino.
 
+Los puertos digitales del Arduino nos permiten manejar perifericos a traves de ellos, pero solo un numero limitado de ellos, tantos como pines disponibles tengamos, pero al momento de necesitar manejar mas de 60 componentes y no tener la posibilidad de usar una cantidad de exagerdad de Arduinos, la principal solución es usar un registro de desplazamiento (74HC595)
+
+\begin{figure}[H]
+\includegraphics[width=8cm]{pinout-74HC595.jpg}
+\centering
+\caption{C.I. 74HC595}
+\label{fig:chip}
+\end{figure}
+
 \subsection{Montaje circuito}
-El montaje del circuito es una de las principales tareas a afrontar, se debe hacer el arreglo de 64 ledes, con sus respectivas resistencias (en este caso de 560 Ω c/u). Para controlar esta cantidad de ledes a través del Arduino haremos uso del circuito integrado 74HC595. En este caso se usará un C.I. por cada fila (en total 8) haciendo uso de tan solo 3 pines digitales del Arduino. 
+El montaje del circuito es una de las principales tareas a afrontar, se debe hacer el arreglo de 64 ledes, con sus respectivas resistencias (en este caso de 560 Ohm c/u). Para controlar esta cantidad de ledes a través del Arduino haremos uso del circuito integrado 74HC595. En este caso se usará un C.I. por cada fila (en total 8) haciendo uso de tan solo 3 pines digitales del Arduino.
 
 \subsection{Codificacion tareas}
 \textbf{FUNCIONES PARA EL MANEJO DEL CHIP:}\par
-o	void ledWrite() //Funcion que recibe 8 enteros, para 8 filas de ledes\par
-o	void patron1 () //Muestra el patron solicitado en el primer punto (es el #5)\par
-o	void verificacion() //Función que verifica el funcionamiento de los 64 LEDs\par
+o	void ledWrite() //Funcion que recibe 8 enteros, para encender 8 filas de ledes\par
+o	void patron1 () //Muestrar el patron solicitado en el primer punto (es el \#5)\par
+o	void verificacion() //Verificar el funcionamiento de los 64 ledes\par
 \textbf{FUNCIONES PARA EL MANEJO DEL ARREGLO DINAMICO:}\\
 o	void CreateList() // Crear una nueva lista\\
 o	void AddItem(int item) // Añadir elemento al final de la lista\\
@@ -82,8 +92,7 @@ int SER  = 2;
 int RCLK = 3;
 int SRCLK = 4;
 #define TEMPO 150
-/////////////////////////////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////
 //VARIABLES GOBLALES PARA MANEJO DEL ARREGLO DINAMICO
 int aux = 0;
 int num = 0; //Cantidad de patrones (P4)
@@ -109,19 +118,21 @@ void ledWrite(int ALed, int BLed, int CLed, int DLed, int ELed, int FLed, int GL
    digitalWrite(RCLK, LOW);
 }
 
-void patron1 (){//ASÍ SACAMOS EL 5:
-  ledWrite(B01111110,255,B11000111,B00000111,B11111110,B11100000,255,255); delay(TEMPO); 
+void patron1 (){//DE ESTA FORMA SACAMOS EL 5:
+  ledWrite(B01111110,255,B11000111,B00000111,B11111110,B11100000,255,255);
+  delay(TEMPO); 
 }
 
-void verificacion(){//ASÍ PRENDEMOS TODOS:
+void verificacion(){//DE ESTA FORMA PRENDEMOS TODOS:
   ledWrite(255,255,255,255,255,255,255,255); delay(TEMPO);  
 }
 
 void patron2(){//DIAGONALES INTERCALADAS
+//USADA PARA VERIFICACIONES DE FUNCIONAMIENTO
   ledWrite(B10000000,B01000000,B00100000,B00010000,B00001000,B00000100,B00000010,B00000001); delay(TEMPO);
   ledWrite(B00000001,B00000010,B00000100,B00001000,B00010000,B00100000,B01000000,B10000000); delay(TEMPO);
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
 
 //FUNCIONES PARA MANEJO DEL ARREGLO DINAMICO
 void CreateList(size_t _capacity) {// Crear una nueva lista
@@ -209,11 +220,12 @@ void askData4() {//Pide los datos para guardarlos en el arreglo (P4)
       AddItem(aux);
     }  
 }
-////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 
 
 //FUNCIONES CONVENCIONALES
 void setup(){
+    //INICIALIZAMOS LOS PUERTOS
    pinMode(SER, OUTPUT);
    pinMode(RCLK, OUTPUT);
    pinMode(SRCLK, OUTPUT);
@@ -245,6 +257,7 @@ void setup(){
     printList();
     Serial.println();
     Serial.println(retardo);
+    retardo = retardo*1000;
   }
   
    Serial.println();
@@ -260,7 +273,7 @@ void loop(){
     //Condicion que pregunta si hay datos
     if(Serial.available()>0){
    
-      opcion = Serial.parseInt(); //Lealo como INT
+      opcion = Serial.parseInt(); //Leer como int
       
       Serial.print("opcion seleccionada: ");
       Serial.print(opcion);
@@ -288,7 +301,6 @@ void loop(){
     for(int i=0; i<(num*8); i+=8){
       ledWrite(list[iter],list[(iter+1)],list[(iter+2)],list[(iter+3)],list[(iter+4)],list[(iter+5)],list[(iter+6)],list[(iter+7)]); delay(TEMPO);
       iter+=8;
-      retardo = retardo*1000;
       delay(retardo);    
     }
   	break;
@@ -300,7 +312,7 @@ void loop(){
 
 \section{Problemas presentados} \label{contenido}
 o	\textbf{Con la conexiones:} El primer problema que se presentó con la implementación fue al intentar hacer el montaje de todos los circuitos integrados en una protoboard, por la cantidad de chips empleados (8) era imposible hacer uso de una sola placa, por lo cual eran necesarias dos o más; así comenzó el diseño implementado en placas de prueba (y con los bombillos al aire <<como se le conoce ordinariamente>>) pero esta implementación no pudo ser llevada a cabo por completo, ya que al momento de avanzar del tercer integrado se encontraba pequeños problemas derivados de la conexión, debido a esto fue necesario hacer uso de conexiones al aire (todas directamente a los objetos (circuitos integrados, resistencias, ledes, etc).\par
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=12cm]{protoboard.jpg}
 \centering
 \caption{Problemas conexiones}
@@ -308,7 +320,7 @@ o	\textbf{Con la conexiones:} El primer problema que se presentó con la impleme
 \end{figure}
 
 o	\textbf{Control de versiones:} A medida que el proyecto iba avanzando y que se tenían diferentes conexiones montadas y otras aun en desarrollo, se presenta la necesidad de tener un control de versiones, de poder estar volviendo a un punto estable donde el programa funcionaba según lo esperado, debido a que Tinkercad no cuenta con este sistema, ni tampoco es posible hacerle seguimiento al montaje a través de Github, nace la necesidad de hacer un uso improvisado de control de versiones, haciendo una copia del circuito cada vez que tenemos un punto estable y así en caso de presentar errores más adelante poder volver a retomar desde la copia. (Se adjunta imagen correspondiente)\par
-\begin{figure}[h]
+\begin{figure}[H]
 \includegraphics[width=12cm]{control de versiones.jpg}
 \centering
 \caption{Control de versiones}
@@ -322,8 +334,11 @@ o	Es muy importante antes de afrontar el problema, investigar sobre los elemento
 o	Para llevar un desarrollo ordenado y evitar errores, es recomendable hacer uso de todo lo aprendido en las clases teóricas y en los laboratorios, llevar un desarrollo secuencial de funciones, ir desarrollando pequeñas tareas e ir comprobando su funcionamiento, para finalmente hacer el acople de todas las funciones empleadas, en este caso fueron divididas en tres segmentos, funciones para el manejo del chip, funciones para el manejo de arreglos dinámicos y las ya conocidas funciones convencionales de Arduino.\par
 o	Finalmente, una consideración mas relacionada con el trabajo en general que con la implementación, es que este tipo de actividades ayudan al estudiante a tener que usar un poco de todo lo aprendido, recapitular bastantes ideas, indagar sobre temas que no quedaron claros, entre otras muchas practicas que conllevan a un mayor aprendizaje.\par
 
-
-\bibliographystyle{IEEEtran}
-\bibliography{references}
+\begin{figure}[H]
+\includegraphics[width=12cm]{Montaje finalizado.jpg}
+\centering
+\caption{Conexión correcta}
+\label{fig:conexion}
+\end{figure}
 
 \end{document}
