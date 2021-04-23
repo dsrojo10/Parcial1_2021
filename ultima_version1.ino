@@ -11,22 +11,22 @@ int aux = 0;
 int num = 0; //Cantidad de patrones (P4)
 int retardo = 0; //Retardo entre patrones (P4)
 int iter = 0; //Iterador (P4)
-int* list;
+int* list; 
 size_t count;
 size_t capacity;
 #define PAUSE 1500
 ///////////////////////////////////////////////////////////
 
 //FUNCIONES MANEJO DEL CHIP
-void ledWrite(int ALed, int BLed, int CLed, int DLed, int ELed, int FLed, int GLed, int HLed){//Funcion para escribir en la matriz
-   shiftOut(SER, SRCLK, LSBFIRST, HLed);
+void ledWrite(int ALed, int BLed, int CLed, int DLed, int ELed, int FLed, int GLed, int HLed){//Funcion para encender los ledes deseados
+   shiftOut(SER, SRCLK, LSBFIRST, HLed); //Fila mas arriba
    shiftOut(SER, SRCLK, LSBFIRST, GLed);
-   shiftOut(SER, SRCLK, LSBFIRST, FLed);
+   shiftOut(SER, SRCLK, LSBFIRST, FLed); //    ...
    shiftOut(SER, SRCLK, LSBFIRST, ELed);
-   shiftOut(SER, SRCLK, LSBFIRST, DLed);
+   shiftOut(SER, SRCLK, LSBFIRST, DLed); //    ...
    shiftOut(SER, SRCLK, LSBFIRST, CLed);
-   shiftOut(SER, SRCLK, LSBFIRST, BLed);
-   shiftOut(SER, SRCLK, LSBFIRST, ALed);
+   shiftOut(SER, SRCLK, LSBFIRST, BLed); //    ...
+   shiftOut(SER, SRCLK, LSBFIRST, ALed); //Fila mas baja
    digitalWrite(RCLK, HIGH);
    digitalWrite(RCLK, LOW);
 }
@@ -39,7 +39,7 @@ void verificacion(){//ASÍ PRENDEMOS TODOS:
   ledWrite(255,255,255,255,255,255,255,255); delay(TEMPO);  
 }
 
-void patron2(){//DIAGONALES INTERCALADAS
+void patron2(){//DIAGONALES INTERCALADAS (Usada para pruebas)
   ledWrite(B10000000,B01000000,B00100000,B00010000,B00001000,B00000100,B00000010,B00000001); delay(TEMPO);
   ledWrite(B00000001,B00000010,B00000100,B00001000,B00010000,B00100000,B01000000,B10000000); delay(TEMPO);
 }
@@ -100,7 +100,7 @@ void printList() {// Muestra la lista por Serial para debug
 
 void askData() {//Pide los datos para guardarlos en el arreglo
 	Serial.println("Lista con 8 elementos");
-    CreateList(8);
+    CreateList(8); 
     Serial.println();
 
     for(int i=0; i<8; i++){
@@ -142,7 +142,7 @@ void setup(){
    Serial.begin(9600);//Inicializar Serial
    int op = 0;
   
-  //PREGUNTA SI DESEA AGREGAR UNA MATRIZ (P)
+  //PREGUNTA SI DESEA AGREGAR UNA MATRIZ (P3)
    Serial.println("Desea crear una matriz propia para el punto 3?");
    Serial.println("1. SI ----- 2. NO"); delay(PAUSE);
    op = Serial.parseInt();
