@@ -9,7 +9,7 @@ int SRCLK = 4;
 //VARIABLES GOBLALES PARA MANEJO DEL ARREGLO DINAMICO
 int aux = 0;
 int num = 0; //Cantidad de patrones (P4)
-int retardo = 0; //Retardo entre patrones (P4)
+int retardo = 0; //Retardo entre patrones (P3)
 int iter = 0; //Iterador (P4)
 int* list; 
 size_t count;
@@ -167,6 +167,7 @@ void setup(){
     printList();
     Serial.println();
     Serial.println(retardo);
+    retardo = retardo*1000;
   }
   
    Serial.println();
@@ -208,9 +209,7 @@ void loop(){
   case 4:
   	Serial.println("Prueba 4");
     for(int i=0; i<(num*8); i+=8){
-      ledWrite(list[iter],list[(iter+1)],list[(iter+2)],list[(iter+3)],list[(iter+4)],list[(iter+5)],list[(iter+6)],list[(iter+7)]); delay(TEMPO);
-      iter+=8;
-      retardo = retardo*1000;
+      ledWrite(list[i],list[(i+1)],list[(i+2)],list[(i+3)],list[(i+4)],list[(i+5)],list[(i+6)],list[(i+7)]); delay(TEMPO);
       delay(retardo);    
     }
   	break;
